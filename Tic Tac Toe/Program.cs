@@ -28,7 +28,6 @@ namespace Tic_Tac_Toe
                 [2,4,6] //Diagonal
             };
 
-            string team;
             string input = "";
             bool success;
 
@@ -37,155 +36,88 @@ namespace Tic_Tac_Toe
             string user1; // Player1
             string user2; // Player2
 
-
             bool game = true;
 
-            while (true)
+            int win1 = 0;
+            int win2 = 0;
+            int draws = 0;
+
+            
+            PlayerChoice();
+           
+            void Game()
             {
-                Console.WriteLine("User1: Which team do you want to play for?");
-                user1 = Console.ReadLine();
-                if(user1 == "x" || user1 == "o")
+                while (game)
                 {
-                    break;
-                } else
-                {
-                    Console.WriteLine("You have to choose between X and O\n");
-                }
-            }
 
-            while (true)
-            {
-                Console.WriteLine("User2: Which team do you want to play for?");
-                user2 = Console.ReadLine();
-                if ((user2 == "x" || user2 == "o") && user2 != user1)
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("You have to choose between X and O, and distinguishing it from User1\n");
-                }
-            }
-
-            Console.WriteLine("Welcome to Tic Tac Toe!\n");
-
-            Showfield();
-
-            while (game)
-            {
-
-                if(move == true)
-                {
-                    Console.WriteLine("User1: Select the field number.");
-                    input = Console.ReadLine();
-                    success = int.TryParse(input, out int putnumber);
-                    putnumber -= 1;
-
-                    if (putnumber < 0 || putnumber > 9)
+                    if (move == true)
                     {
-                        Console.WriteLine("Error!\n");
-                        success = false;
-                    }
-                    if (success)
-                    {
+                        Console.WriteLine("User1: Select the field number.");
+                        input = Console.ReadLine();
+                        success = int.TryParse(input, out int putnumber);
+                        putnumber -= 1;
 
-                        if (field[putnumber] == null)
+                        if (putnumber < 0 || putnumber > 9)
                         {
-                            field[putnumber] = char.Parse(user1);
+                            Console.WriteLine("Error!\n");
+                            success = false;
+                        }
+                        if (success)
+                        {
 
-
-                            for (int i = 0; i < winCombination.Length; i++)
+                            if (field[putnumber] == null)
                             {
-                                if (field[winCombination[i][0]] == field[winCombination[i][1]] &&
-                                    field[winCombination[i][1]] == field[winCombination[i][2]] &&
-                                    field[winCombination[i][0]].HasValue)
+                                field[putnumber] = char.Parse(user1);
+                                WinCheck1();
+                                DrawCheck();
+                                if (game == false)
                                 {
-                                    game = false;
-                                    Showfield();
-                                    Console.WriteLine("Win! You can celebrate!");
-                                    Console.ReadKey();
+                                    Menu();
                                 }
-
-                            }
-                            if (!field.Contains(null) && game == true)
-
-                            {
+                                move = false;
                                 Showfield();
-                                Console.WriteLine("draw");
-                                game = false;
-                                Console.ReadKey();
-                                Environment.Exit(0);
-
-
                             }
-
-                            move = false;
-                            Showfield();
-                        }
-                        else
-                        {
-                            Console.WriteLine("This field is full");
-                        }
-                    }
-                }
-
-                if (move == false)
-                {
-                    Console.WriteLine("User2: Select the field number.");
-                    input = Console.ReadLine();
-                    success = int.TryParse(input, out int putnumber);
-                    putnumber -= 1;
-
-                    if (putnumber < 0 || putnumber > 9)
-                    {
-                        Console.WriteLine("Error!\n");
-                        success = false;
-
-                    }
-                    if (success)
-                    {
-
-                        if (field[putnumber] == null)
-                        {
-                            field[putnumber] = char.Parse(user2);
-
-                            for (int i = 0; i < winCombination.Length; i++)
+                            else
                             {
-                                if (field[winCombination[i][0]] == field[winCombination[i][1]] &&
-                                    field[winCombination[i][1]] == field[winCombination[i][2]] &&
-                                    field[winCombination[i][0]].HasValue)
+                                Console.WriteLine("This field is full");
+                            }
+                        }
+                    }
+
+                    if (move == false)
+                    {
+                        Console.WriteLine("User2: Select the field number.");
+                        input = Console.ReadLine();
+                        success = int.TryParse(input, out int putnumber);
+                        putnumber -= 1;
+
+                        if (putnumber < 0 || putnumber > 9)
+                        {
+                            Console.WriteLine("Error!\n");
+                            success = false;
+
+                        }
+                        if (success)
+                        {
+
+                            if (field[putnumber] == null)
+                            {
+                                field[putnumber] = char.Parse(user2);
+                                WinCheck2();
+                                DrawCheck();
+                                if (game == false)
                                 {
-                                    game = false;
-                                    Showfield();
-                                    Console.WriteLine("Win! You can celebrate!");
-                                    Console.ReadKey();
-                                    Environment.Exit(0);
-
-
+                                    Menu();
                                 }
-
-                            }
-                            if (!field.Contains(null) && game == true)
-
-                            {
+                                move = true;
                                 Showfield();
-                                Console.WriteLine("draw");
-                                game = false;
-                                Console.ReadKey();
-
-
+                            }
+                            else
+                            {
+                                Console.WriteLine("This field is full");
                             }
 
-
-
-                            move = true;
-                            Showfield();
                         }
-                        else
-                        {
-                            Console.WriteLine("This field is full");
-                        }
-
                     }
                 }
             }
@@ -209,6 +141,106 @@ namespace Tic_Tac_Toe
                         Console.Write("\n");
                     }
                 }
+            }
+
+            void WinCheck1()
+            {
+                for (int i = 0; i < winCombination.Length; i++)
+                {
+                    if (field[winCombination[i][0]] == field[winCombination[i][1]] &&
+                        field[winCombination[i][1]] == field[winCombination[i][2]] &&
+                        field[winCombination[i][0]].HasValue)
+                    {
+                        game = false;
+                        Showfield();
+                        Console.WriteLine("\nWin! Player1 can celebrate!\n");
+                        win1++;                    
+                    }
+
+                }
+            }
+            void WinCheck2()
+            {
+                for (int i = 0; i < winCombination.Length; i++)
+                {
+                    if (field[winCombination[i][0]] == field[winCombination[i][1]] &&
+                        field[winCombination[i][1]] == field[winCombination[i][2]] &&
+                        field[winCombination[i][0]].HasValue)
+                    {
+                        game = false;
+                        Showfield();
+                        Console.WriteLine("\nWin! Player2 can celebrate!\n");
+                        win2++;
+                    }
+
+                }
+            }
+            void DrawCheck()
+            {
+                if (!field.Contains(null) && game == true)
+
+                {
+                    Showfield();
+                    Console.WriteLine("draw\n");
+                    draws++;
+                    game = false;
+                }
+            }
+
+            void Menu()
+            {
+                Console.WriteLine("Do you want to play again? 1 - Yes. 2 - No");
+                string Choice = Console.ReadLine();
+                if( Choice == "1")
+                {
+                    game = true;
+                    Array.Clear(field, 0, field.Length);
+                    PlayerChoice();
+                }
+                else if(Choice == "2") 
+                {
+                    Environment.Exit(0);
+                }
+                else {
+                    Console.WriteLine("You need to choose 1 or 2");
+                }
+
+            }
+
+            void PlayerChoice()
+            {
+                while (true)
+                {
+                    Console.WriteLine("User1: Which team do you want to play for?");
+                    user1 = Console.ReadLine();
+                    if (user1 == "x" || user1 == "o")
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("You have to choose between X and O\n");
+                    }
+                }
+
+                while (true)
+                {
+                    Console.WriteLine("User2: Which team do you want to play for?");
+                    user2 = Console.ReadLine();
+                    if ((user2 == "x" || user2 == "o") && user2 != user1)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("You have to choose between X and O, and distinguishing it from User1\n");
+                    }
+                }
+                Console.WriteLine("\nWelcome to Tic Tac Toe!\n");
+                Console.WriteLine($"\nPlayer1 wins: {win1}. Player2 wins: {win2}. Draws {draws}\n");
+                move = true;
+                Showfield();
+                Game();
             }
         }
     }
